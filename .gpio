@@ -1,0 +1,61 @@
+#!/usr/bin/env python
+#
+# Smple light switcher for RPI 
+# Author: Catalin Dordea ( http://catalin.dordea.ro)
+#
+import RPi.GPIO as GPIO
+import time
+import sys, getopt
+
+def main(argv):
+        ##### CHANGE THIS WITH YOUR PIN NUMBER BCM FORMAT
+        pinNo = 20  # pin number BCM numbering schema
+		
+        action = 'status'
+        sec = '60'
+        try:
+                opts, args = getopt.getopt(argv,"ha:t:",["action=","time="])
+        except getopt.GetoptError:
+                print 'file.py -a <action : on/off/status> -t <time (seconds)>'
+
+
+        for opt, arg in opts:
+                if opt == '-h':
+                        print 'file.py -a <action : on/off/status> -t <time (seconds)>'
+
+                elif opt in ("-a", "--action"):
+                        action = arg
+                elif opt in ("-t", "--time"):
+				sec = arg
+				
+		GPIO.setmode(GPIO.BCM)
+		GPIO.setwarnings(True)
+		
+        if action == 'on':
+                GPIO.setup(pinNo, GPIO.OUT)
+                GPIO.output(pinNo,False)
+                print "on for ",sec," seconds"
+                secunde = int(sec)
+                for i in reversed(range(0,secunde)):
+                        time.sleep(1)
+                        sys.stderr.write('\r%4d' % i)
+                print " "
+                print "light timer ended ... going off"
+                GPIO.output(pinNo,True)
+                GPIO.setup(pinNo, GPIO.IN)
+
+        if action == 'off':
+                GPIO.setup(pinNo, GPIO.OUT)
+                GPIO.output(pinNo,True)
+                print "turned off"
+                GPIO.setup(pinNo, GPIO.IN)
+
+        if action == 'status':
+                state = GPIO.gpio_function(pinNo) 
+                print state
+
+
+if __name__ == "__main__":
+   main(sys.argv[1:])
+
+
