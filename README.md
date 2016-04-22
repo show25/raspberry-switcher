@@ -5,7 +5,7 @@
 <h2>What you get?</h2>
 
 <p>-Web interface for remote light control.<br/>
--Python scripts for SSH licgt control</p>
+-Python scripts for SSH light control</p>
 
 Use this at your own risk.
 
